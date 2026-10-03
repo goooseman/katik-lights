@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 620" role="img" aria-labelledby="title desc">
+  <title id="title">Маршрут из Милпитаса к Cypress Inn on Miramar Beach</title>
+  <desc id="desc">Схематичная карта южной части залива Сан-Франциско: из Милпитаса через Сан-Матео к побережью Half Moon Bay.</desc>
+  <defs>
+    <linearGradient id="water" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#153943"/><stop offset="1" stop-color="#0b232d"/></linearGradient>
+    <linearGradient id="land" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#263e3d"/><stop offset="1" stop-color="#182f34"/></linearGradient>
+    <filter id="glow"><feGaussianBlur stdDeviation="7" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  </defs>
+  <rect width="900" height="620" rx="8" fill="url(#water)"/>
+  <path d="M0 0H900V135C820 123 771 147 721 172c-52 26-92 23-136 8-49-17-81-12-124 14-42 26-74 26-120 8-51-21-88-6-132 26-57 42-112 48-209 31Z" fill="#112b32" opacity=".8"/>
+  <path d="M0 620V474c73-22 116-45 153-82 40-40 79-50 120-64 43-14 78-43 108-82 31-41 67-49 105-67 35-17 65-46 83-84 8-18 19-31 37-43h194v568Z" fill="url(#land)"/>
+  <path d="M126 620c49-48 80-100 120-155 36-50 80-76 133-100 55-24 94-54 117-105 22-50 59-94 113-111" fill="none" stroke="#a9bba84d" stroke-width="7" stroke-linecap="round"/>
+  <path d="M126 620c49-48 80-100 120-155 36-50 80-76 133-100 55-24 94-54 117-105 22-50 59-94 113-111" fill="none" stroke="#e9c68a" stroke-width="3" stroke-linecap="round" stroke-dasharray="8 11"/>
+  <path d="M0 463c92-13 137-10 194 16 52 24 91 16 131-17 36-30 71-40 111-42" fill="none" stroke="#85a7aa30" stroke-width="2"/>
+  <g font-family="system-ui,-apple-system,sans-serif" fill="#b7c8c5">
+    <text x="44" y="80" font-size="15" letter-spacing="3" fill="#e9c68a">НА ЮГО-ЗАПАД</text>
+    <text x="58" y="520" font-size="20">Милпитас</text>
+    <text x="353" y="383" font-size="17">San Mateo</text>
+    <text x="628" y="186" font-size="17">Half Moon Bay</text>
+    <text x="665" y="218" font-size="14" fill="#e9c68a">Miramar Beach</text>
+    <text x="720" y="530" font-size="13" fill="#95afb1">Pacific Ocean</text>
+  </g>
+  <g filter="url(#glow)">
+    <circle cx="126" cy="557" r="8" fill="#f4d69b"/><circle cx="126" cy="557" r="18" fill="none" stroke="#e9c68a55"/>
+    <circle cx="650" cy="208" r="8" fill="#f4d69b"/><circle cx="650" cy="208" r="22" fill="none" stroke="#e9c68a66"/>
+  </g>
+  <path d="M650 208l17-25 17 25-17 25Z" fill="#f3d69a" opacity=".9"/>
+  <path d="M667 182v-18m-8 6 8-9 8 9" stroke="#f3d69a" stroke-width="3" fill="none"/>
+  <text x="695" y="207" font-family="Georgia,serif" font-size="19" fill="#f3d69a">Cypress Inn</text>
+  <text x="695" y="232" font-family="system-ui,sans-serif" font-size="12" fill="#b7c8c5">Lighthouse Building</text>
+  <text x="44" y="585" font-family="system-ui,sans-serif" font-size="12" letter-spacing="1.4" fill="#90a8aa">МЫ ОСТАВЛЯЕМ ЗАЛИВ ПОЗАДИ — И ЕДЕМ К ОКЕАНУ</text>
+</svg>

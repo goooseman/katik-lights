@@ -65,7 +65,7 @@ function showAlbum(n,focus=false){
  m.media.forEach((asset,i)=>{
  const figure=document.createElement('figure');figure.className='album-frame';
  const el=document.createElement(asset.type==='video'?'video':'img');
- if(asset.type==='video'){el.controls=true;el.playsInline=true;el.preload='none';el.poster=asset.poster;el.setAttribute('aria-label',`${m.place}, видео ${i+1}`);el.addEventListener('play',()=>{if(playing){playing=false;ambientAudio?.pause();if(ctx&&master)master.gain.setTargetAtTime(0,ctx.currentTime,.2);sound.setAttribute('aria-pressed','false');document.querySelector('#soundLabel').textContent='Включить океан'}})}
+ if(asset.type==='video'){el.controls=true;el.playsInline=true;el.preload='none';el.poster=asset.poster;el.setAttribute('aria-label',`${m.place}, видео ${i+1}`);el.addEventListener('play',()=>ocean.stop())}
  else{el.alt=`${m.place} · ${m.year}. Наше воспоминание, фотография ${i+1}`;el.width=asset.width;el.height=asset.height;el.loading=i===0?'eager':'lazy';el.decoding='async'}
  el.src=asset.src;figure.append(el);if(asset.type==='image')addPhotoBeam(figure,el);reel.append(figure);
  });
@@ -86,39 +86,8 @@ document.querySelector('#nextAlbum').onclick=()=>album===9?go(3):showAlbum(album
 reel.addEventListener('scroll',frameStatus,{passive:true});reel.addEventListener('keydown',e=>{if(e.target.tagName==='VIDEO')return;if(e.key==='ArrowRight'||e.key==='ArrowLeft'){e.preventDefault();moveFrame(e.key==='ArrowRight'?1:-1)}});
 window.addEventListener('resize',()=>{if(current===2)reel.scrollTo({left:reel.children[frameIndex].offsetLeft,behavior:'instant'})});
 showAlbum(0);
-let ctx,master,playing=false;const sound=document.querySelector('#sound');function createOcean(){const AC=window.AudioContext||window.webkitAudioContext;ctx=new AC();master=ctx.createGain();master.gain.value=0;master.connect(ctx.destination);const buffer=ctx.createBuffer(1,ctx.sampleRate*8,ctx.sampleRate),data=buffer.getChannelData(0);let last=0;for(let i=0;i<data.length;i++){last=(last+Math.random()*.035-.0175)/1.015;data[i]=last*5}const noise=ctx.createBufferSource();noise.buffer=buffer;noise.loop=true;const filter=ctx.createBiquadFilter();filter.type='lowpass';filter.frequency.value=650;const waves=ctx.createGain();waves.gain.value=.38;noise.connect(filter).connect(waves).connect(master);noise.start();const tide=ctx.createOscillator(),depth=ctx.createGain();tide.frequency.value=.085;depth.gain.value=.19;tide.connect(depth).connect(waves.gain);tide.start()}
-let ambientAudio,ambientAudioUrl;
-function makeOceanWav(){
- const rate=22050,seconds=6,count=rate*seconds,buffer=new ArrayBuffer(44+count*2),view=new DataView(buffer);
- const put=(offset,value)=>{for(let i=0;i<value.length;i++)view.setUint8(offset+i,value.charCodeAt(i))};
- put(0,'RIFF');view.setUint32(4,36+count*2,true);put(8,'WAVE');put(12,'fmt ');view.setUint32(16,16,true);view.setUint16(20,1,true);view.setUint16(22,1,true);view.setUint32(24,rate,true);view.setUint32(28,rate*2,true);view.setUint16(32,2,true);view.setUint16(34,16,true);put(36,'data');view.setUint32(40,count*2,true);
- let low=0;
- for(let i=0;i<count;i++){const white=Math.random()*2-1;low=low*.992+white*.008;const swell=Math.sin(i/rate*Math.PI*2*.11)*.18+Math.sin(i/rate*Math.PI*2*.23)*.08;const sample=Math.max(-1,Math.min(1,(low*2.2+swell)*.28));view.setInt16(44+i*2,sample*32767,true)}
- return buffer;
-}
-function createAmbientAudio(){
- ambientAudio=new Audio();ambientAudio.loop=true;ambientAudio.preload='auto';ambientAudio.playsInline=true;ambientAudio.setAttribute('playsinline','');ambientAudio.volume=.42;
- ambientAudioUrl=URL.createObjectURL(new Blob([makeOceanWav()],{type:'audio/wav'}));ambientAudio.src=ambientAudioUrl;
-}
-function prepareAudioSession(){
- try{
-  if('audioSession' in navigator&&navigator.audioSession)navigator.audioSession.type='playback';
- }catch(e){}
-}
-sound.onclick=async()=>{
- try{
-  if(!ambientAudio)createAmbientAudio();
-  prepareAudioSession();
-  if(!playing){
-   try{await ambientAudio.play()}catch(audioError){if(!ctx)createOcean();prepareAudioSession();if(ctx?.state==='suspended')await ctx.resume();if(ctx.state!=='running')throw audioError;master.gain.setTargetAtTime(.36,ctx.currentTime,.15)}
-   playing=true;
-  }else{
-   ambientAudio.pause();ambientAudio.currentTime=0;if(ctx&&master)master.gain.setTargetAtTime(0,ctx.currentTime,.2);playing=false;
-  }
-  sound.setAttribute('aria-pressed',String(playing));document.querySelector('#soundLabel').textContent=playing?'Океан звучит':'Включить океан';
- }catch(e){sound.setAttribute('aria-pressed','false');document.querySelector('#soundLabel').textContent='Нажми ещё раз'}
-};
-document.addEventListener('visibilitychange',()=>{if(document.hidden)pauseMemories();if(document.hidden){ambientAudio?.pause();if(ctx)ctx.suspend()}else if(playing){prepareAudioSession();if(ambientAudio?.paused)ambientAudio.play().catch(()=>{});else if(ctx)ctx.resume()}});
+const ocean=new OceanPlayer(document.querySelector('#sound'),document.querySelector('#soundLabel'));
+document.addEventListener('visibilitychange',()=>{if(document.hidden){pauseMemories();ocean.hide()}else ocean.show()});
 const queryParams=new URLSearchParams(window.location.search);
 const requestedChapter=Number(queryParams.get('chapter'));
 const requestedGift=queryParams.get('gift');
